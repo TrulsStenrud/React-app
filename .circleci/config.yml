@@ -15,6 +15,7 @@ jobs:
     docker:
       - image: circleci/node:jessie
     working_directory: /tmp/workspace
+    steps:
       - aws-s3/sync:
           arguments: |
             --acl public-read \
