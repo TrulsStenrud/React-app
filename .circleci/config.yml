@@ -17,8 +17,3 @@ jobs:
           from: build
           overwrite: true
           to: 's3://trulsstenrud.no'
-
-workflows:
-  node-tests:
-    jobs:
-      - node/test
