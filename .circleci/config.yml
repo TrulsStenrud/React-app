@@ -13,7 +13,7 @@ jobs:
     executor: my-executor
     steps:
       - checkout:
-        path: ~/repo
+          path: ~/repo
       - run:
           name: "Install dependencies and buld"
           command: |
