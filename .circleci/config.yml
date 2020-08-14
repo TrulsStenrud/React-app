@@ -14,14 +14,16 @@ jobs:
     docker:
       - image: circleci/node:jessie
     steps:
-      - checkout
+      - checkout:
+        path: ~/repo
       - run: 
           name: "Install dependencies and buld"
           command: |
+            cd ~/repo
             npm install
             npm run build
       - persist_to_workspace:
-          root: /tmp/workspace
+          root: ./
           paths:
             - '*'
   upload:
@@ -33,7 +35,7 @@ jobs:
           arguments: |
             --acl public-read \
             --cache-control "max-age=86400"
-          from: build
+          from: ~/repo/build
           overwrite: true
           to: 's3://trulsstenrud.no'
 
