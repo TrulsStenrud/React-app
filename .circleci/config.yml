@@ -1,7 +1,6 @@
 version: 2.1
 orbs:
   aws-s3: circleci/aws-s3@1.0.16
-  node: circleci/node@3.0.0
 
 jobs:
   build:
@@ -11,7 +10,7 @@ jobs:
       - checkout
       - run: npm install
       - run: npm run build
-      - run: ls
+  upload:
       - aws-s3/sync:
           arguments: |
             --acl public-read \
@@ -19,3 +18,16 @@ jobs:
           from: build
           overwrite: true
           to: 's3://trulsstenrud.no'
+
+workflows:
+  version: 2
+  build-and-deploy:
+    jobs:
+      - build
+      - upload:
+          filters:
+            branches:
+              only:
+                - master
+          requires:
+            - build
