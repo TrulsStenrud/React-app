@@ -10,6 +10,7 @@ jobs:
     steps:
       - checkout
       - run: npm build
+      - run: ls
       - aws-s3/sync:
           arguments: |
             --acl public-read \
