@@ -10,10 +10,10 @@ jobs:
     steps:
       - checkout
       - run: 
-        name: "Install dependencies and buld"
-        command: |
-          npm install
-          npm run build
+          name: "Install dependencies and buld"
+          command: |
+            npm install
+            npm run build
   upload:
     docker:
       - image: circleci/node:jessie
