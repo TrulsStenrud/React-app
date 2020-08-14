@@ -9,13 +9,18 @@ jobs:
     working_directory: /tmp/workspace
     steps:
       - checkout
-      - run: npm install
-      - run: npm run build
+      - run: 
+        name: "Install dependencies and buld"
+        command: |
+          npm install
+          npm run build
   upload:
     docker:
       - image: circleci/node:jessie
     working_directory: /tmp/workspace
     steps:
+      - attach_workspace:
+          at: /tmp/workspace
       - aws-s3/sync:
           arguments: |
             --acl public-read \
