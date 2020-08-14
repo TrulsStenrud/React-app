@@ -6,11 +6,15 @@ jobs:
   build:
     docker:
       - image: circleci/node:jessie
+    working_directory: /tmp/workspace
     steps:
       - checkout
       - run: npm install
       - run: npm run build
   upload:
+    docker:
+      - image: circleci/node:jessie
+    working_directory: /tmp/workspace
       - aws-s3/sync:
           arguments: |
             --acl public-read \
