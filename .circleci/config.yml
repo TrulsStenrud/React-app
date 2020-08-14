@@ -9,6 +9,7 @@ jobs:
       - image: circleci/node:jessie
     steps:
       - checkout
+      - run: npm install
       - run: npm run build
       - run: ls
       - aws-s3/sync:
