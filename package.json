@@ -19,7 +19,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "deploy": "npm build && aws s3 sync build/ s3://trulsstenrud.no --delete"
+    
   },
   "eslintConfig": {
     "extends": "react-app"
