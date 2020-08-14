@@ -11,33 +11,31 @@ executors:
 jobs:
   build:
     executor: my-executor
-    docker:
-      - image: circleci/node:jessie
     steps:
       - checkout:
         path: ~/repo
-      - run: 
-          name: "Install dependencies and buld"
-          command: |
-            cd ~/repo
-            npm install
-            npm run build
+      - run:
+        name: "Install dependencies and buld"
+        command: |
+          cd ~/repo
+          npm install
+          npm run build
       - persist_to_workspace:
-          root: ./
-          paths:
-            - '*'
+        root: ./
+        paths:
+          - "*"
   upload:
     executor: my-executor
     steps:
       - attach_workspace:
-          at: /tmp/workspace
+        at: /tmp/workspace
       - aws-s3/sync:
-          arguments: |
-            --acl public-read \
-            --cache-control "max-age=86400"
-          from: ~/repo/build
-          overwrite: true
-          to: 's3://trulsstenrud.no'
+        arguments: |
+          --acl public-read \
+          --cache-control "max-age=86400"
+        from: ~/repo/build
+        overwrite: true
+        to: "s3://trulsstenrud.no"
 
 workflows:
   version: 2
