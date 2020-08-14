@@ -6,7 +6,7 @@ orbs:
 jobs:
   build:
     docker:
-      - image: 'cimg/python:3.6'
+      - image: circleci/node:jessie
     steps:
       - checkout
       - run: npm build
