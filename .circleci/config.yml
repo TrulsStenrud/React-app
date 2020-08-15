@@ -10,36 +10,34 @@ jobs:
     working_directory: /tmp/workspace
     steps:
       - checkout:
-          path: ~/repo
+          path: /tmp/workspace/
       - run:
           name: "Install dependencies and buld"
           command: |
-            cd ~/repo
             npm install
             npm run build
-            mv ~/repo/build /tmp/workspace/
       - persist_to_workspace:
           root: ./
           paths:
-            - "build"
+            - "*"
   
   validate-and-run-terraform:
     docker:
-      - image: cimg/base:2020.01
+      - image: hashicorp/terraform:light
     working_directory: /tmp/workspace
     steps:
       - attach_workspace:
           at: /tmp/workspace
       - terraform/init:
-          path: ~/repo/terraform
+          path: /tmp/workspace/terraform
       - terraform/validate:
-          path: ~/repo/terraform
+          path: /tmp/workspace/terraform
       - terraform/plan:
-          path: ~/repo/terraform
+          path: /tmp/workspace/terraform
       - terraform/apply:
-          path: ~/repo/terraform
+          path: /tmp/workspace/terraform
       - terraform/destroy:
-          path: ~/repo/terraform
+          path: /tmp/workspace/terraform
 
 
   upload:
