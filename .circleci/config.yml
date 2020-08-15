@@ -28,21 +28,16 @@ jobs:
     steps:
       - attach_workspace:
           at: /tmp/workspace
-      - terraform/init:
-          path: /tmp/workspace/terraform
       - terraform/validate:
-          path: /tmp/workspace/terraform
-      - terraform/plan:
           path: /tmp/workspace/terraform
       - terraform/apply:
           path: /tmp/workspace/terraform
-      - terraform/destroy:
-          path: /tmp/workspace/terraform
+
 
 
   upload:
     docker:
-      - image: cimg/base:2020.01
+      - image: circleci/python:jessie
     working_directory: /tmp/workspace
     steps:
       - attach_workspace:
