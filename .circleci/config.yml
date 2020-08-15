@@ -1,16 +1,13 @@
 version: 2.1
 orbs:
   aws-s3: circleci/aws-s3@1.0.16
-
-executors:
-  my-executor:
-    docker:
-      - image: circleci/node:jessie
-    working_directory: /tmp/workspace
+  terraform: circleci/terraform@1.0.1
 
 jobs:
   build:
-    executor: my-executor
+    docker:
+      - image: circleci/node:jessie
+    working_directory: /tmp/workspace
     steps:
       - checkout:
           path: ~/repo
@@ -25,8 +22,32 @@ jobs:
           root: ./
           paths:
             - "build"
+  
+  validate-and-run-terraform:
+    docker:
+      - image: cimg/base:2020.01
+    working_directory: /tmp/workspace
+    - attach_workspace:
+          at: /tmp/workspace
+    steps:
+      - attach_workspace:
+          at: /tmp/workspace
+      - terraform/init:
+          path: ~/repo/terraform
+      - terraform/validate:
+          path: ~/repo/terraform
+      - terraform/plan:
+          path: ~/repo/terraform
+      - terraform/apply:
+          path: ~/repo/terraform
+      - terraform/destroy:
+          path: ~/repo/terraform
+
+
   upload:
-    executor: my-executor
+    docker:
+      - image: cimg/base:2020.01
+    working_directory: /tmp/workspace
     steps:
       - attach_workspace:
           at: /tmp/workspace
@@ -43,10 +64,17 @@ workflows:
   build-and-deploy:
     jobs:
       - build
-      - upload:
+      - validate-and-run-terraform:
           filters:
             branches:
               only:
                 - master
           requires:
             - build
+      - upload:
+          filters:
+            branches:
+              only:
+                - master
+          requires:
+            - validate-and-run-terraform
