@@ -5,6 +5,10 @@
 /.pnp
 .pnp.js
 
+# terraform state
+*.tfstate*
+.terraform*
+
 # testing
 /coverage
 
