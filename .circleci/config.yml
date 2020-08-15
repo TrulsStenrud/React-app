@@ -27,8 +27,6 @@ jobs:
     docker:
       - image: cimg/base:2020.01
     working_directory: /tmp/workspace
-      - attach_workspace:
-          at: /tmp/workspace
     steps:
       - attach_workspace:
           at: /tmp/workspace
