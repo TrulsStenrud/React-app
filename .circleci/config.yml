@@ -4,23 +4,39 @@ orbs:
   terraform: circleci/terraform@1.0.1
 
 jobs:
-  build:
+  checkout-repo:
     docker:
-      - image: circleci/node:jessie
+      - image: cimg/base:2020.01
     working_directory: /tmp/workspace
     steps:
       - checkout:
           path: /tmp/workspace/
-      - run:
-          name: "Install dependencies and buld"
-          command: |
-            npm install
-            npm run build
       - persist_to_workspace:
           root: ./
           paths:
             - "*"
-  
+
+  build-and-test:
+    docker:
+      - image: circleci/node:jessie
+    working_directory: /tmp/workspace
+    steps:
+      - attach_workspace:
+          at: /tmp/workspace
+      - run:
+          name: "Install dependencies"
+          command: npm install
+      - run:
+          name: "Build frontent"
+          command: npm run build
+      - run:
+          name: "Run tests"
+          command: npm run test
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - "*"
+
   validate-and-run-terraform:
     docker:
       - image: hashicorp/terraform:light
@@ -32,8 +48,6 @@ jobs:
           path: /tmp/workspace/terraform
       - terraform/apply:
           path: /tmp/workspace/terraform
-
-
 
   upload:
     docker:
@@ -54,7 +68,10 @@ workflows:
   version: 2
   build-and-deploy:
     jobs:
-      - build
+      - checkout-repo
+      - build-and-test:
+          requires:
+            - checkout-repo
       - validate-and-run-terraform:
           context: aws
           filters:
@@ -62,7 +79,7 @@ workflows:
               only:
                 - master
           requires:
-            - build
+            - build-and-test
       - upload:
           context: aws
           filters:
@@ -71,3 +88,4 @@ workflows:
                 - master
           requires:
             - validate-and-run-terraform
+            
