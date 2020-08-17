@@ -1,14 +1,30 @@
 
+terraform {
+  backend "s3" {
+    key            = "main.tfstate"
+    bucket         = "trulsstenrud.no-state"
+    dynamodb_table = "trulsstenrud.no-state"
+    acl            = "bucket-owner-full-control"
+    region         = "eu-west-1"
+  }
+}
+
 provider "aws" {
-    region = "eu-west-1"
+  region = "eu-west-1"
+}
+
+provider "aws" {
+  alias  = "us"
+  region = "us-east-1"
 }
 
 resource aws_acm_certificate homepage {
-  domain_name               = "trulsstenrud.no"
-  validation_method         = "DNS"
+  provider          = aws.us
+  domain_name       = "trulsstenrud.no"
+  validation_method = "EMAIL"
 }
 
-resource aws_s3_bucket homepage_bucket {
+resource "aws_s3_bucket" "homepage_bucket" {
   bucket = "trulsstenrud.no"
   acl    = "public-read"
   policy = <<POLICY
@@ -38,9 +54,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     domain_name = aws_s3_bucket.homepage_bucket.bucket_domain_name
     origin_id   = aws_s3_bucket.homepage_bucket.id
 
-    s3_origin_config {
-      origin_access_identity = "origin-access-identity/cloudfront/ABCDEFG1234567"
-    }
+
   }
 
   enabled             = true
@@ -74,11 +88,12 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   restrictions {
     geo_restriction {
       restriction_type = "whitelist"
-      locations        = ["EU"]
+      locations        = ["NO"]
     }
   }
 
   viewer_certificate {
     acm_certificate_arn = aws_acm_certificate.homepage.arn
+    ssl_support_method  = "sni-only"
   }
 }
