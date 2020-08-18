@@ -26,9 +26,10 @@ resource aws_acm_certificate trulsstenrud {
 }
 
 resource "aws_s3_bucket" "homepage_bucket" {
-  bucket = "trulsstenrud.no"
-  acl    = "public-read"
-  policy = <<POLICY
+  bucket        = "trulsstenrud.no"
+  acl           = "public-read"
+  force_destroy = true
+  policy        = <<POLICY
 {
     "Version": "2012-10-17",
     "Id": "IDSADAS",
