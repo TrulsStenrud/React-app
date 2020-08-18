@@ -18,10 +18,11 @@ provider "aws" {
   region = "us-east-1"
 }
 
-resource aws_acm_certificate homepage {
-  provider          = aws.us
-  domain_name       = "trulsstenrud.no"
-  validation_method = "EMAIL"
+resource aws_acm_certificate trulsstenrud {
+  provider                  = aws.us
+  domain_name               = "trulsstenrud.no"
+  subject_alternative_names = ["stenrud.eu"]
+  validation_method         = "EMAIL"
 }
 
 resource "aws_s3_bucket" "homepage_bucket" {
@@ -62,7 +63,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   comment             = "Cloudfront for my webpage"
   default_root_object = "index.html"
 
-  aliases = ["trulsstenrud.no"]
+  aliases = ["trulsstenrud.no", "stenrud.eu"]
 
   price_class = "PriceClass_200"
 
@@ -93,7 +94,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   }
 
   viewer_certificate {
-    acm_certificate_arn = aws_acm_certificate.homepage.arn
+    acm_certificate_arn = aws_acm_certificate.trulsstenrud.arn
     ssl_support_method  = "sni-only"
   }
 }
