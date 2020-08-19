@@ -64,7 +64,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   comment             = "Cloudfront for my webpage"
   default_root_object = "index.html"
 
-  aliases = ["trulsstenrud.no", "stenrud.eu"]
+  aliases = ["trulsstenrud.no", "www.trulsstenrud.no", "stenrud.eu"]
 
   price_class = "PriceClass_200"
 
