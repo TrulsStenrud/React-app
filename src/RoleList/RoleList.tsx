@@ -46,22 +46,28 @@ function shuffle(array: String[], seed: number) {
     return array;
 }
 
+function addDays(date: Date, days: number) {
+    var newDate = new Date(date.valueOf());
+    newDate.setDate(newDate.getDate() + days);
+    return newDate;
+}
+
 const RoleList = () => {
 
-    const [weekNr, setWeekNr] = useState(getWeek(new Date()))
+    const [currDate, setDate] = useState(new Date())
 
-    const newOrder = shuffle(Object.assign([], roles), weekNr + 1)
+    const newOrder = shuffle(Object.assign([], roles), getWeek(currDate) + 1)
 
     return (
         <>
             <HBox>
-                Uke {weekNr} 
+                Uke {getWeek(currDate)}
                 <VBox>
-                    <button onClick={() => setWeekNr(weekNr + 1)}>
-                    ▲
+                    <button onClick={() => setDate(addDays(currDate, 7))}>
+                        ▲
             </button>
-                    <button onClick={() => setWeekNr(weekNr - 1)}>
-                    ▼
+                    <button onClick={() => setDate(addDays(currDate, -7))}>
+                        ▼
             </button>
                 </VBox>
             </HBox>
