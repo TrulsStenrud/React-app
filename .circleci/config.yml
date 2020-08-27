@@ -27,11 +27,11 @@ jobs:
           name: "Install dependencies"
           command: npm install
       - run:
-          name: "Build frontent"
-          command: npm run build
-      - run:
           name: "Run tests"
           command: npm run test
+      - run:
+          name: "Build frontent"
+          command: npm run build
       - persist_to_workspace:
           root: ./
           paths:
