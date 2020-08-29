@@ -14,36 +14,49 @@ const people = [
     'Amalie',
     'William',
 ]
-const roles = [
-    'Leder',
-    'Sekretær',
-    'Ordstyrer',
-    '',
-    '',
-    '',
-    '',
-    '',
-]
 
-function shuffle(array: String[], seed: number) {
-    var currentIndex = array.length, temporaryValue, randomIndex;
+const roles = ['Leder', 'Ordstyrer', 'Sekretær']
 
+function getAssignedRoles() {
+    const seed = "AwesomeSeed"
     const rand = seedrandom(seed.toString())
 
-    // While there remain elements to shuffle...
-    while (0 !== currentIndex) {
+    const assignedRoles: string[][] = []
+    const rest: string[][] = []
 
-        // Pick a remaining element...
-        randomIndex = Math.floor(rand.quick() * currentIndex);
-        currentIndex -= 1;
+    roles.forEach(() => {
+        rest.push(Object.assign([], people))
+    })
 
-        // And swap it with the current element.
-        temporaryValue = array[currentIndex];
-        array[currentIndex] = array[randomIndex];
-        array[randomIndex] = temporaryValue;
+    while (assignedRoles.length !== people.length) {
+        const taken: string[] = []
+        const current_roles: string[] = []
+        
+        roles.forEach((role, index) => {
+            const t_rest = rest[index].filter(x => !taken.includes(x))
+            const selected = t_rest[Math.floor(rand.quick() * t_rest.length)]
+            current_roles.push(selected)
+            taken.push(selected)
+            rest[index] = rest[index].filter(x => x !== selected)
+        })
+
+        assignedRoles.push(current_roles)
     }
 
-    return array;
+    return assignedRoles
+}
+
+function getRole(person: string, assignedRoles: string[][], weekNr: number) {
+    const nr = weekNr % people.length
+    const curr_roles = assignedRoles[nr]
+
+    for (var i = 0; i < curr_roles.length; i++) {
+        if (curr_roles[i] === person) {
+            return roles[i]
+        }
+    }
+
+    return ''
 }
 
 function addDays(date: Date, days: number) {
@@ -54,14 +67,15 @@ function addDays(date: Date, days: number) {
 
 const RoleList = () => {
 
+    const assignedRoles = getAssignedRoles()
     const [currDate, setDate] = useState(new Date())
 
-    const newOrder = shuffle(Object.assign([], roles), getWeek(currDate) + 1)
+    const weekNr = getWeek(currDate)
 
     return (
         <>
             <HBox>
-                Uke {getWeek(currDate)}
+                Uke {weekNr}
                 <VBox>
                     <button onClick={() => setDate(addDays(currDate, 7))}>
                         ▲
@@ -74,12 +88,12 @@ const RoleList = () => {
             < table cellSpacing='20px' style={{ textAlign: 'left' }} >
                 <tbody>
                     {people.map((person, index) => (
-                        <tr>
+                        <tr key={person}>
                             <td>
                                 {person}
                             </td>
                             <td>
-                                {newOrder[index]}
+                                {getRole(person, assignedRoles, weekNr)}
                             </td>
                         </tr>
                     ))}
