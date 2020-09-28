@@ -15,7 +15,7 @@ const people = [
     'William',
 ]
 
-const roles = ['Leder', 'Ordstyrer', 'Sekretær']
+const roles = ['Leder', '', 'Sekretær']
 
 function getAssignedRoles() {
     const seed = "AwesomeSeed"
