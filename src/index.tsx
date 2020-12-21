@@ -4,12 +4,28 @@ import './index.css';
 import TekledApp from './Tekledelse/TekledApp';
 import * as serviceWorker from './serviceWorker';
 import MenuOverlay from './ManuOverlay/MenuOverlay';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route
+} from "react-router-dom";
 
 ReactDOM.render(
   <React.StrictMode>
-    <MenuOverlay >
-      <TekledApp/>
-    </MenuOverlay>
+    <Router>
+      <MenuOverlay >
+        <Switch>
+          <Route path="/tekled">
+            <TekledApp />
+          </Route>
+          <Route path="/">
+            Welcome
+            <br/>
+            Currently not much to see here
+          </Route>
+        </Switch>
+      </MenuOverlay>
+    </Router>
   </React.StrictMode>,
   document.getElementById('root')
 );
