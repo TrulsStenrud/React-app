@@ -1,7 +1,9 @@
-import React, { useState } from "react"
+
 import { getWeek } from "date-fns"
-import seedrandom from 'seedrandom';
-import { VBox, HBox } from "../LayoutStyles";
+import { VBox, HBox } from "../../LayoutStyles";
+import { useState } from "react";
+import seedrandom from "seedrandom";
+import React from "react";
 
 
 const people = [

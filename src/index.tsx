@@ -1,12 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
+import TekledApp from './Tekledelse/TekledApp';
 import * as serviceWorker from './serviceWorker';
+import MenuOverlay from './ManuOverlay/MenuOverlay';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <MenuOverlay >
+      <TekledApp/>
+    </MenuOverlay>
   </React.StrictMode>,
   document.getElementById('root')
 );
