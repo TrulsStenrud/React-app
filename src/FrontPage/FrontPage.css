@@ -1,0 +1,31 @@
+
+
+.weatherCard{
+    background-color: white;
+    color:black;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    min-width: 25em;
+    min-height: 3em;
+    
+    margin: .2em;
+    align-items: center;
+    justify-content: center;
+    font-size: .5em;
+    
+}
+
+img{
+    max-height: inherit;
+    width: auto;
+  height: auto;
+}
+
+.item{
+    flex-grow: .5;
+    max-height: 2em;
+}
+.item-center{
+    flex-grow: 4;
+}

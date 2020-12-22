@@ -9,6 +9,7 @@ import {
   Switch,
   Route
 } from "react-router-dom";
+import FrontPage from './FrontPage/FrontPage';
 
 ReactDOM.render(
   <React.StrictMode>
@@ -19,9 +20,7 @@ ReactDOM.render(
             <TekledApp />
           </Route>
           <Route path="/">
-            Welcome
-            <br/>
-            Currently not much to see here
+            <FrontPage />
           </Route>
         </Switch>
       </MenuOverlay>
