@@ -61,7 +61,7 @@ data "aws_iam_policy_document" "website_policy" {
     ]
     principals {
       identifiers = ["*"]
-      type = "AWS"
+      type        = "AWS"
     }
     resources = [
       "arn:aws:s3:::trulsstenrud.no/*"
@@ -82,6 +82,11 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   is_ipv6_enabled     = true
   comment             = "Cloudfront for my webpage"
   default_root_object = "index.html"
+  custom_error_response {
+    error_code = 404
+    response_code = 200
+    response_page_path = "/index.html"
+  }
 
   aliases = ["trulsstenrud.no", "stenrud.eu"]
 
@@ -112,6 +117,8 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
       locations        = ["NO"]
     }
   }
+
+
 
   viewer_certificate {
     acm_certificate_arn = aws_acm_certificate.trulsstenrud.arn
