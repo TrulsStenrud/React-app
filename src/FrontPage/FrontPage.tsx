@@ -1,6 +1,6 @@
 import { useWeather } from '../api/useApi'
 import './FrontPage.css'
-import React from 'react'
+import React, { useState } from 'react'
 import rain from '../icons/rain.png';
 import storm from '../icons/storm.png';
 import cloud from '../icons/cloudy.png';
@@ -58,13 +58,6 @@ type Reading = {
 
 const FrontPage = () => {
 
-    var lat, lon
-
-    navigator.geolocation.getCurrentPosition(pos => {
-        lat = pos.coords.latitude
-        lon = pos.coords.longitude
-        console.log("success")
-    })
 
     const fetchData = useWeather("Oslo")
 
@@ -188,18 +181,37 @@ function getImg(condition: string) {
 const DailyCard = (props: { city: City, readings: Reading[] }) => {
     const { city, readings } = props
 
+
+    const [isClicked, setClicked] = useState(false)
+
+    const state = isClicked ? "open" : "collapsed"
+
     const temps = readings.map(reading => reading.temp.current)
-    const min = Math.min(...temps)
-    const max = Math.max(...temps)
+    const min = Math.round(Math.min(...temps))
+    const max = Math.round(Math.max(...temps))
 
     const img = getImg(readings[0].weather[0].main)
-    return <div className="weatherCard">
-        <div className="item">
-            <img src={img} alt="Weather conditions" />
+    return <>
+        <button className="weatherCard" onClick={() => setClicked(!isClicked)}>
+            <div className="item">
+                <img src={img} alt="Weather conditions" />
+            </div>
+            <div className="item-center">{`${min}  -  ${max} °C`}</div>
+            <div className="item">{`${readings[0].date.getDate()}.`}</div>
+        </button>
+        <div id="detail" className={state}>
+            {readings.map((reading, id) => {
+            const image = getImg(reading.weather[0].main)
+            return <div className="innerWeatherCard" key={id}>
+                <div className="item">
+                <img src={image} alt="Weather conditions" />
+            </div>
+            <div className="item-center">{`${Math.round(reading.temp.current)} °C`}</div>
+            <div className="item">{`${readings[0].date.getDate()}.`}</div>
+            </div>}
+            )}
         </div>
-        <div className="item-center">{`${min}  -  ${max} °C`}</div>
-        <div className="item">{`${readings[0].date.getDate()}.`}</div>
-    </div>
+    </>
 }
 
 
