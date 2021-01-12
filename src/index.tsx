@@ -15,7 +15,7 @@ ReactDOM.render(
     <Router>
       <MenuOverlay >
         <Switch>
-          <Route path="/tekled">
+          <Route path="/roles">
             <TekledApp />
           </Route>
           <Route path="/">

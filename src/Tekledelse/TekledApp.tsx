@@ -5,7 +5,7 @@ import React from 'react';
 
 class TekledApp extends React.Component{
   componentDidMount(){
-    document.title = "Rolle-kalender"
+    document.title = "Roles"
   }
 
   render(){

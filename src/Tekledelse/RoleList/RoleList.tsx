@@ -1,5 +1,5 @@
 
-import { getWeek } from "date-fns"
+import { differenceInBusinessDays } from "date-fns"
 import { VBox, HBox } from "../../LayoutStyles";
 import { useState } from "react";
 import seedrandom from "seedrandom";
@@ -7,20 +7,18 @@ import React from "react";
 
 
 const people = [
+    'Johanne',
+    'Sara',
+    'Kevin',
     'Truls',
-    'Erik',
-    'Marius',
-    'Christer',
-    'Rune',
-    'Tuva',
-    'Amalie',
-    'William',
+    'Jostein',
+    'Eirin'
 ]
 
-const roles = ['Leder', 'Ordfører', 'Sekretær']
+const roles = ['Ordstyrer']
 
 function getAssignedRoles() {
-    const seed = "AwesomeSeed"
+    const seed = "AwesomeSeed3"
     const rand = seedrandom(seed.toString())
 
     const assignedRoles: string[][] = []
@@ -33,7 +31,7 @@ function getAssignedRoles() {
     while (assignedRoles.length !== people.length) {
         const taken: string[] = []
         const current_roles: string[] = []
-        
+
         roles.forEach((role, index) => {
             const t_rest = rest[index].filter(x => !taken.includes(x))
             const selected = t_rest[Math.floor(rand.quick() * t_rest.length)]
@@ -48,8 +46,8 @@ function getAssignedRoles() {
     return assignedRoles
 }
 
-function getRole(person: string, assignedRoles: string[][], weekNr: number) {
-    const nr = weekNr % people.length
+function getRole(person: string, assignedRoles: string[][], baseNr: number) {
+    const nr = baseNr % people.length
     const curr_roles = assignedRoles[nr]
 
     for (var i = 0; i < curr_roles.length; i++) {
@@ -61,28 +59,30 @@ function getRole(person: string, assignedRoles: string[][], weekNr: number) {
     return ''
 }
 
-function addDays(date: Date, days: number) {
+// I want to keep it
+/* function addDays(date: Date, days: number) {
     var newDate = new Date(date.valueOf());
     newDate.setDate(newDate.getDate() + days);
     return newDate;
-}
+} */
 
 const RoleList = () => {
 
-    const assignedRoles = getAssignedRoles()
-    const [currDate, setDate] = useState(new Date())
+    var startDate = new Date("01/8/2021")
+    const initDay = differenceInBusinessDays(new Date(), startDate)
 
-    const weekNr = getWeek(currDate)
+    const assignedRoles = getAssignedRoles()
+    const [currDay, setDay] = useState(initDay)
 
     return (
         <>
             <HBox>
-                Uke {weekNr}
+                Day {currDay}
                 <VBox>
-                    <button onClick={() => setDate(addDays(currDate, 7))}>
+                    <button onClick={() => setDay(currDay + (currDay < 15 ? 1 : 0))}>
                         ▲
             </button>
-                    <button onClick={() => setDate(addDays(currDate, -7))}>
+                    <button onClick={() => setDay(currDay + (currDay > 1 ? -1 : 0))}>
                         ▼
             </button>
                 </VBox>
@@ -95,7 +95,7 @@ const RoleList = () => {
                                 {person}
                             </td>
                             <td>
-                                {getRole(person, assignedRoles, weekNr)}
+                                {getRole(person, assignedRoles, currDay)}
                             </td>
                         </tr>
                     ))}
