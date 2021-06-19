@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import TekledApp from './Tekledelse/TekledApp';
+import SpotifyApp from './Spotify/SpotifyApp';
 import * as serviceWorker from './serviceWorker';
 import MenuOverlay from './ManuOverlay/MenuOverlay';
 import {
@@ -15,6 +16,9 @@ ReactDOM.render(
     <Router>
       <MenuOverlay >
         <Switch>
+        <Route path="/spotify">
+          <SpotifyApp/>
+          </Route>
           <Route path="/roles">
             <TekledApp />
           </Route>

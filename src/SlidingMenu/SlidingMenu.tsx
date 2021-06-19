@@ -8,6 +8,7 @@ const SlidingMenu = (props: { show: boolean }) => {
     return <div id="slidingMenu" className={visibility}>
         <Link className="link" to="/">Home</Link>
         <Link className="link" to="/roles">Roles</Link>
+        <Link className="link" to="/spotify">Spotify</Link>
     </div>
 }
 
