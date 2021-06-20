@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 // import { weatherApiKey } from './apiKeys';
 
 type FetchData = {
@@ -7,19 +7,65 @@ type FetchData = {
     data: any,
 }
 
-export function useApi(url: string): FetchData {
+// Hope it never gets sorted by linter
+const baseApi = 'https://api.spotify.com/v1/'
+const urlPlayer = baseApi + "me/player"
+const urlSearch = baseApi + 'search'
+const urlAuth = 'https://accounts.spotify.com/authorize';
+const urlRedirect = String(process.env.REACT_APP_SPOTIFY_REDIRECT_URI);
+
+
+export function apiSearch(text:string, token:string, setResult:any){
+    const type = 'track'
+    const market = 'NO'
+    const limit = 10 // might adjust
+
+    const uri = urlSearch 
+    + '?q=' + encodeURIComponent(text)
+    + '&type=' + type
+    + '&market=' + market
+    + '&limit=' + limit
+
+    fetch(uri, {
+        method: 'GET',
+        headers: {
+            Authorization: 'Bearer ' + token
+        }
+    })
+        .then(res => res.json())
+        .then(
+            (result) => {
+                console.log("received data", result)
+                setResult(result)
+            },
+            // Note: it's important to handle errors here
+            // instead of a catch() block so that we don't swallow
+            // exceptions from actual bugs in components.
+            (error) => {
+                console.log("received error", error)
+            }
+        )
+    }
+
+
+export function useGet(url: string, token: string): FetchData {
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
-    const [items, setItems] = useState([]);
+    const [data, setData] = useState(null);
 
     useEffect(() => {
-        fetch(url)
+        fetch(url, {
+            method: 'GET',
+            headers: {
+                Authorization: 'Bearer ' + token
+            }
+        })
             .then(res => res.json())
             .then(
                 (result) => {
                     console.log("received data", result)
                     setIsLoaded(true);
-                    setItems(result);
+                    setData(result);
                 },
                 // Note: it's important to handle errors here
                 // instead of a catch() block so that we don't swallow
@@ -30,35 +76,119 @@ export function useApi(url: string): FetchData {
                     setError(error);
                 }
             )
-    }, [])
+    }, [url, token])
 
 
-    return { isLoaded, error, data: items }
+    return { isLoaded, error, data }
 }
 
-const authEndpoint = 'https://accounts.spotify.com/authorize';
+export function usePost(url: string, token: string): FetchData {
+    const [error, setError] = useState(null);
+    const [isLoaded, setIsLoaded] = useState(false);
+    const [data, setData] = useState(null);
+
+    
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                Authorization: 'Bearer ' + token
+            }
+        })
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    console.log("received data", result)
+                    setIsLoaded(true);
+                    setData(result);
+                },
+                // Note: it's important to handle errors here
+                // instead of a catch() block so that we don't swallow
+                // exceptions from actual bugs in components.
+                (error) => {
+                    console.log("received error", error)
+                    setIsLoaded(true);
+                    setError(error);
+                }
+            )
+    
+
+
+    return { isLoaded, error, data }
+}
+
+const scopes = "user-read-currently-playing user-read-playback-state streaming user-modify-playback-state";
 const clientId = String(process.env.REACT_APP_SPOTIFY_CLIENT_ID);
-const redirectUri = String(process.env.REACT_APP_SPOTIFY_REDIRECT_URI);
-const scopes = "user-read-currently-playing user-read-playback-state";
 
 export const authUri =
-    'https://accounts.spotify.com/authorize' +
+    urlAuth +
+    '?response_type=token' +
+    '&client_id=' + clientId +
+    (scopes ? '&scope=' + encodeURIComponent(scopes) : '') +
+    '&redirect_uri=' + encodeURIComponent(urlRedirect)
+
+export const getTokenCodeUri =
+    urlAuth +
     '?response_type=code' +
     '&client_id=' + clientId +
     (scopes ? '&scope=' + encodeURIComponent(scopes) : '') +
-    '&redirect_uri=' + encodeURIComponent(redirectUri)
+    '&redirect_uri=' + encodeURIComponent(urlRedirect)
+
+// export function fetchAccessToken(code:string){
+//     const uri = "https://accounts.spotify.com/api/token"
+//     + '?grant_type=authorization_code'
+//     + '&code=' + encodeURIComponent(code)
+//     + '&redirect_uri=' + encodeURIComponent(redirectUri)
+// }
 
 
-const weatherUrl = 'http://api.openweathermap.org/data/2.5/forecast?units=metric&'
 
-export function useSpotify() {
-    const clientID = process.env.REACT_APP_SPOTIFY_CLIENT_ID
-    const call = "stuff"
-    return useApi(call)
+export function useApiNext(token:string, finished:any){
+    const uri = urlPlayer + "/next"
 
+    fetch(uri, {
+        method: 'POST',
+        headers: {
+            'Authorization': 'Bearer ' + token,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }
+    })
+        .then(
+            (result) => {
+                console.log("received data", result);
+                finished();
+            },
+            (error) => {
+                console.log("received error", error);
+            });
 }
-export function useWeather(city: string): FetchData {
-    const weatherApiKey = "123"
-    const call = `${weatherUrl}q=${city}&appid=${weatherApiKey}`
-    return useApi(call)
+
+export function useApiPrevious(token:string, finished:any){
+    const uri = urlPlayer + "/previous"
+    
+    post(uri, token, finished);
+}
+
+export function useApiQueuTrack(id:string, token:string, finished:any){
+    const uri = urlPlayer + "/queue"
+    + '?uri=' + id
+
+    post(uri, token, finished);
+}
+
+function post(uri: string, token: string, finished: any) {
+    fetch(uri, {
+        method: 'POST',
+        headers: {
+            Authorization: 'Bearer ' + token
+        }
+    })
+        .then(
+            (result) => {
+                console.log("received data", result);
+                finished();
+            },
+            (error) => {
+                console.log("received error", error);
+            });
 }
