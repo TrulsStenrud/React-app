@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { useEffect } from "react";
-import { apiSearch, useApiNext as useApiNext, useApiPrevious as useApiPrevious, useApiQueuTrack, useGet } from "../api/useApi";
+
+import { apiSearch, apiNext, apiPrevious, apiQueueTrack } from "../api/useApi";
 import { VBox, HBox } from "../LayoutStyles";
 import SongBtn from "./SongBtn/SongtBtn";
 
@@ -12,13 +12,12 @@ export type AccessToken = {
 }
 
 type SpotifyComponentsProps = {
-    token: AccessToken,
-    playSound: boolean
+    token: AccessToken
 }
 
 const SpotifyComponent = (props: SpotifyComponentsProps) => {
 
-    const { token, playSound } = props
+    const { token } = props
     // const fetchData = useGet("https://api.spotify.com/v1/me/player", token.access_token)
 
     const [list, setList] = useState<any>({})
@@ -39,22 +38,25 @@ const SpotifyComponent = (props: SpotifyComponentsProps) => {
             search()
         }
     }
-    var deviceId = ""
     
     const useNext = () =>{
         setStatus("Loading")
-        useApiNext(token.access_token, () => setStatus(''))
+        apiNext(token.access_token, () => setStatus(''))
     }
     const usePrevious = () =>{
         setStatus("Loading")
-        useApiPrevious(token.access_token, () => setStatus(''))
+        apiPrevious(token.access_token, () => setStatus(''))
     }
     const useQueueSong = (id:string) => {
         setStatus("Loading")
-        useApiQueuTrack(id, token.access_token, () => setStatus(''))
+        apiQueueTrack(id, token.access_token, () => setStatus(''))
     }
 
     
+    // TOTO remove, just for looking at SongBtn
+    // useEffect(() => {
+    //     apiSearch("sex", token.access_token, setList)
+    // },[])
 
     
     return <VBox>

@@ -15,14 +15,14 @@ const SpotifyApp = () => {
 
 
     
-  const [code, setCode] = useState('')
+  // const [code, setCode] = useState('')
   const [hash, setHash] = useState({})
   const location = useLocation();
   // const history = useHistory()
   
   useEffect(() => {
     
-    console.log(location.hash)
+    // console.log(location.hash)
     const searchParams = new URLSearchParams(location.search)
     
     if (location.hash) {
@@ -35,7 +35,7 @@ const SpotifyApp = () => {
             initial[parts[0]] = decodeURIComponent(parts[1]);
           }
           return initial;
-        }, {}))
+        }, []))
 
 
       // the code is probably not secret 
@@ -46,17 +46,18 @@ const SpotifyApp = () => {
     }
     else if(searchParams.has('code'))
     {
-      setCode(String(searchParams.get('code')))
+      // setCode(String(searchParams.get('code')))
     }
     else{
-      console.log("Did not get")
+      console.log("Redirecting to spotify auth")
       //TODO history stuff
-      // window.location.assign(authUri);
+      window.location.assign(authUri);
     }
-  }, [location.hash])
+  }, [location.hash, location.search])
   
-  const ip = '192.168.1.55'
-  const url = window.location.href.replace('localhost', ip)
+  // console.log(window.location)
+  // const ip = '192.168.1.55'
+  const url = window.location.href//.replace('localhost', ip)
 
   const size = 200
 
@@ -71,7 +72,7 @@ const SpotifyApp = () => {
           Login to Spotify
         </a>}
         {'access_token' in  hash && 
-          <SpotifyComponent token={hash as AccessToken} playSound={true}/>
+          <SpotifyComponent token={hash as AccessToken} />
         }
       
       

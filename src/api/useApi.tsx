@@ -12,7 +12,7 @@ const baseApi = 'https://api.spotify.com/v1/'
 const urlPlayer = baseApi + "me/player"
 const urlSearch = baseApi + 'search'
 const urlAuth = 'https://accounts.spotify.com/authorize';
-const urlRedirect = String(process.env.REACT_APP_SPOTIFY_REDIRECT_URI);
+const urlRedirect = window.location.origin + '/spotify';
 
 
 export function apiSearch(text:string, token:string, setResult:any){
@@ -142,7 +142,7 @@ export const getTokenCodeUri =
 
 
 
-export function useApiNext(token:string, finished:any){
+export function apiNext(token:string, finished:any){
     const uri = urlPlayer + "/next"
 
     fetch(uri, {
@@ -163,13 +163,13 @@ export function useApiNext(token:string, finished:any){
             });
 }
 
-export function useApiPrevious(token:string, finished:any){
+export function apiPrevious(token:string, finished:any){
     const uri = urlPlayer + "/previous"
     
     post(uri, token, finished);
 }
 
-export function useApiQueuTrack(id:string, token:string, finished:any){
+export function apiQueueTrack(id:string, token:string, finished:any){
     const uri = urlPlayer + "/queue"
     + '?uri=' + id
 
