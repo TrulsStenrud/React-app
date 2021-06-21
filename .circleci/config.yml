@@ -45,9 +45,9 @@ jobs:
       - attach_workspace:
           at: /tmp/workspace
       - terraform/validate:
-          path: /tmp/workspace/terraform
+          module_path: /tmp/workspace/terraform
       - terraform/apply:
-          path: /tmp/workspace/terraform
+          module_path: /tmp/workspace/terraform
 
   upload:
     docker:
