@@ -70,6 +70,7 @@ workflows:
     jobs:
       - checkout-repo
       - build-and-test:
+          context: react
           requires:
             - checkout-repo
       - validate-and-run-terraform:
