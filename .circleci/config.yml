@@ -39,7 +39,7 @@ jobs:
 
   validate-and-run-terraform:
     docker:
-      - image: hashicorp/terraform:light
+      - image: hashicorp/terraform:0.14.3
     working_directory: /tmp/workspace
     steps:
       - attach_workspace:
