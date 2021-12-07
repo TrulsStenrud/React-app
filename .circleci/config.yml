@@ -31,7 +31,7 @@ jobs:
           command: npm run test
       - run:
           name: "Build frontent"
-          command: npm run build
+          command: npm run vite:build
       - persist_to_workspace:
           root: ./
           paths:
@@ -60,7 +60,7 @@ jobs:
           arguments: |
             --acl public-read \
             --cache-control "max-age=86400"
-          from: build
+          from: dist
           overwrite: true
           to: "s3://trulsstenrud.no"
 
