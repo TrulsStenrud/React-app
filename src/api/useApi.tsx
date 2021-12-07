@@ -1,15 +1,5 @@
 import { useState, useEffect } from "react";;
 
-
-// not sure where else to put this yet
-declare global {
-  interface ImportMeta {
-    env: {
-      REACT_APP_SPOTIFY_CLIENT_ID: string;
-    };
-  }
-}
-
 type FetchData = {
   isLoaded: boolean;
   error: any;
