@@ -21,5 +21,5 @@
   },
   "include": [
     "src"
-, "env.d.ts"  ]
+, "env.d.ts", "api-sample/availableDevicesSample.ts"  ]
 }
