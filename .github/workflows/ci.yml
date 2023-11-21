@@ -16,6 +16,7 @@ defaults:
 
 env:
   ACCOUNT_ID: "900831751659"
+  AWS_REGION: "eu-west-1"
   S3_BUCKET_NAME: "trulsstenrud.com"
   ROLE_NAME: "GithubActions"
 
@@ -38,8 +39,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 18
-      - name: Install dependencies
-        run: npm ci
+      # - name: Install dependencies
+      #   run: npm ci
       # - name: Lint
       #   run: npm run lint
       # - name: Build
