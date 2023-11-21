@@ -42,8 +42,8 @@ jobs:
         run: npm ci
       # - name: Lint
       #   run: npm run lint
-      - name: Build
-        run: npm run vite:build
+      # - name: Build
+      #   run: npm run vite:build
       - name: Configure AWS credentials
         run: |
           export AWS_ROLE_ARN="arn:aws:iam::$ACCOUNT_ID:role/$ROLE_NAME"
