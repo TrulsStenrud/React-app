@@ -61,7 +61,8 @@ jobs:
           EOF
           curl -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=sts.amazonaws.com" \
             | jq -r '.value' > "$AWS_WEB_IDENTITY_TOKEN_FILE"
-          aws sts get-caller-identity
+      - name: Test AWS credentials
+        run: aws sts get-caller-identity
       # - name: Upload to S3
       #   if: env.BRANCH_NAME == 'master'
       #   run: |
