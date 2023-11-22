@@ -51,9 +51,9 @@ jobs:
       - name: configure aws credentials
         uses: aws-actions/configure-aws-credentials@v1.7.0
         with:
-          role-to-assume: "arn:aws:iam::$ACCOUNT_ID:role/$ROLE_NAME" #change to reflect your IAM role’s ARN
+          role-to-assume: "arn:aws:iam::${{ env.ACCOUNT_ID }}:role/${{ env.ROLE_NAME }}" #change to reflect your IAM role’s ARN
           role-session-name: GitHub_to_AWS
-          aws-region: "$AWS_REGION"
+          aws-region: ${{ env.AWS_REGION }}
       - name: Test AWS credentials
         run: |
           aws sts get-caller-identity
