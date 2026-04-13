@@ -35,7 +35,7 @@ jobs:
       options: --user ${{ needs.get-runner-user.outputs.uid_gid }}
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: 18
       - name: Install dependencies
