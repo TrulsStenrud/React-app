@@ -34,7 +34,7 @@ jobs:
       image: mcr.microsoft.com/playwright:v1.39.0-jammy
       options: --user ${{ needs.get-runner-user.outputs.uid_gid }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: actions/setup-node@v4
         with:
           node-version: 18
